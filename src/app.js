@@ -51,7 +51,7 @@ app.use((req,res,next)=>{
   	res.locals.sesion = true
   	res.locals.nombre = req.session.nombre.toUpperCase();
   	res.locals.identificador = req.session.identificador
-  	//res.locals.tipo = req.session.tipo
+  	res.locals.tipo = req.session.tipo
   }
   if(req.session.tipo=="Coordinador"){
   	res.locals.coordinador = true
@@ -179,9 +179,13 @@ app.post('/registrousuario',(req,res)=>{
 });
 
 app.get('/cursos',(req,res)=>{
-	res.render('cursos',{
-		
-	});
+	if(req.session.tipo=="Coordinador"){
+		res.render('cursos',{
+		});
+	}else{
+		res.render('error',{		
+		});
+	}
 });
 
 app.post('/registrocursos',(req,res)=>{
@@ -238,12 +242,16 @@ app.get('/inscripciones',(req,res)=>{
 				if(err){
 					return console.log(err)
 				}
-				res.render('inscripciones',{
-					listado:respuesta,
-					listadoo: respuestaa,
-					listadooo:respuestaaa
-				});
-
+				if(req.session.tipo=="Coordinador"){
+					res.render('inscripciones',{
+						listado:respuesta,
+						listadoo: respuestaa,
+						listadooo:respuestaaa
+					});
+				}else{
+					res.render('error',{
+					});	
+				}
 			})
 		})
 	})
@@ -287,12 +295,16 @@ app.get('/coordinador',(req,res)=>{
 				if(err){
 					return console.log(err)
 				}
-				res.render('coordinador',{
-					listado:respuesta,
-					listadoo: respuestaa,
-					listadooo:respuestaaa
-				});
-
+				if(req.session.tipo=="Coordinador"){
+					res.render('coordinador',{
+						listado:respuesta,
+						listadoo: respuestaa,
+						listadooo:respuestaaa
+					});
+				}else{
+					res.render('error',{
+					});	
+				}
 			})
 		})
 	})
@@ -321,9 +333,14 @@ app.get('/matricula',(req,res)=>{
 		if(err){
 			return console.log(err)
 		}
-		res.render('matricula',{
-			listado:respuesta
-		});
+		if(req.session.tipo=="Aspirante"){
+			res.render('matricula',{
+				listado:respuesta
+			});
+		}else{
+			res.render('error',{
+			});
+		}
 	})
 
 });
